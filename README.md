@@ -1,11 +1,11 @@
 # create-umi-ts
 
-Creates a Typescript UmiJS application using the command line.
+Creates a simple gradle wrapper project.
 
 ## Usage
 
 ```bash
-$ yarn create umi-ts <appName>
+$ yarn create gradlew <appName>
 ```
 
 ## LICENSE
