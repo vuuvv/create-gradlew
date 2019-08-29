@@ -1,7 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
-    id 'java'
 }
 
 allprojects {
@@ -10,36 +9,22 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: "java"
-    apply plugin: "org.springframework.boot"
-    apply plugin: "io.spring.dependency-management"
-
-    configurations {
-        developmentOnly
-        runtimeClasspath {
-            extendsFrom developmentOnly
-        }
-        compileOnly {
-            extendsFrom annotationProcessor
-        }
-    }
-
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
     repositories {
         mavenLocal()
         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
         mavenCentral()
     }
+    if (it.name.endsWith("-web") || it.name == "portal") {
+        it.apply plugin: 'org.springframework.boot'
+        it.apply plugin: 'io.spring.dependency-management'
+        it.apply plugin: 'java'
+    } else {
+        it.apply plugin: 'java-library'
+    }
 
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        compileOnly 'org.projectlombok:lombok'
-        developmentOnly 'org.springframework.boot:spring-boot-devtools'
-        runtimeOnly 'mysql:mysql-connector-java'
-        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-        annotationProcessor 'org.projectlombok:lombok'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly 'org.projectlombok:lombok:1.18.8'
+        annotationProcessor 'org.projectlombok:lombok:1.18.8'
+        implementation 'cn.hutool:hutool-all:4.6.3'
     }
 }
