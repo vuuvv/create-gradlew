@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
+    id "org.springframework.boot" version "$VERSION_SPRING_BOOT" apply false
+    id "io.spring.dependency-management" version "$VERSION_DEPENDENCY_MANAGEMENT" apply false
 }
 
 allprojects {
@@ -9,22 +9,54 @@ allprojects {
 }
 
 subprojects {
+    it.apply plugin: "io.spring.dependency-management"
+    it.apply plugin: "idea"
+
+    if (it.name.endsWith("-web") || it.name == "portal") {
+        it.apply plugin: "org.springframework.boot"
+        it.apply plugin: "java"
+    } else {
+        it.apply plugin: "java-library"
+    }
+
+    configurations {
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:$VERSION_SPRING_BOOT"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$VERSION_SPRING_CLOUD"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:$VERSION_SPRING_CLOUD_ALIBABA"
+        }
+        dependencies {
+            dependency "org.projectlombok:lombok:$VERSION_LOMBOK"
+            dependency "cn.hutool:hutool-all:$VERSION_HUTOOL"
+        }
+    }
+
     repositories {
         mavenLocal()
         maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
         mavenCentral()
     }
-    if (it.name.endsWith("-web") || it.name == "portal") {
-        it.apply plugin: 'org.springframework.boot'
-        it.apply plugin: 'io.spring.dependency-management'
-        it.apply plugin: 'java'
-    } else {
-        it.apply plugin: 'java-library'
-    }
 
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.8'
-        annotationProcessor 'org.projectlombok:lombok:1.18.8'
-        implementation 'cn.hutool:hutool-all:4.6.3'
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+        implementation "cn.hutool:hutool-all"
     }
 }

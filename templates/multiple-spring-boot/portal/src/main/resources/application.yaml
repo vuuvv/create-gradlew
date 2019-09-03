@@ -1,6 +1,21 @@
+
+
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://xxx.xxx.xxx.xxx:3306/db?useSSL=true&useUnicode=true
-    username: root
-    password: password
+  application:
+    name: 'vmall-portal'
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.98.42.247:8848
+dubbo:
+  scan:
+    base-packages: com.vuuvv.vmall.services
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    address: spring-cloud://localhost
+server:
+  port: 7001
